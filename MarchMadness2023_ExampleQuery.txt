@@ -1,0 +1,9 @@
+SELECT DISTINCT W.Season, W.TeamID, W.Reg_Szn_Wins, L.Reg_Szn_Losses, HW.Reg_Szn_Home_Wins, HL.Reg_Szn_Home_Losses, AW.Reg_Szn_Away_Wins, AL.Reg_Szn_Away_Losses, NW.Reg_Szn_Neutral_Wins, NL.Reg_Szn_Neutral_Losses
+FROM (((((((SELECT Season, WTeamID AS TeamID, COUNT(*) AS Reg_Szn_Wins FROM MRegularSeasonCompactResults GROUP BY Season, WTeamID)  AS W LEFT JOIN (SELECT Season, LTeamID AS TeamID, COUNT(*) AS Reg_Szn_Losses 
+FROM MRegularSeasonCompactResults GROUP BY Season, LTeamID)  AS L ON (W.TeamID = L.TeamID) AND (W.Season = L.Season)) LEFT JOIN (SELECT Season, WTeamID AS TeamID, COUNT(*) AS Reg_Szn_Home_Wins 
+FROM MRegularSeasonCompactResults WHERE WLoc = 'H' GROUP BY Season, WTeamID)  AS HW ON (W.TeamID = HW.TeamID) AND (W.Season = HW.Season)) LEFT JOIN (SELECT Season, WTeamID AS TeamID, COUNT(*) AS Reg_Szn_Away_Wins 
+FROM MRegularSeasonCompactResults WHERE WLoc = 'A' GROUP BY Season, WTeamID)  AS AW ON (W.TeamID = AW.TeamID) AND (W.Season = AW.Season)) LEFT JOIN (SELECT Season, LTeamID AS TeamID, COUNT(*) AS Reg_Szn_Home_Losses 
+FROM MRegularSeasonCompactResults WHERE WLoc = 'A' GROUP BY Season, LTeamID)  AS HL ON (W.TeamID = HL.TeamID) AND (W.Season = HL.Season)) LEFT JOIN (SELECT Season, LTeamID AS TeamID, COUNT(*) AS Reg_Szn_Away_Losses 
+FROM MRegularSeasonCompactResults WHERE WLoc = 'H' GROUP BY Season, LTeamID)  AS AL ON (W.TeamID = AL.TeamID) AND (W.Season = AL.Season)) LEFT JOIN (SELECT Season, WTeamID AS TeamID, COUNT(*) AS Reg_Szn_Neutral_Wins 
+FROM MRegularSeasonCompactResults WHERE WLoc = 'N' GROUP BY Season, WTeamID)  AS NW ON (W.TeamID = NW.TeamID) AND (W.Season = NW.Season)) LEFT JOIN (SELECT Season, LTeamID AS TeamID, COUNT(*) AS Reg_Szn_Neutral_Losses 
+FROM MRegularSeasonCompactResults WHERE WLoc = 'N' GROUP BY Season, LTeamID)  AS NL ON (W.TeamID = NL.TeamID) AND (W.Season = NL.Season);
